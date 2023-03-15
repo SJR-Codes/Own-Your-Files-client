@@ -228,6 +228,7 @@ function getPhotos() {
 function getPhoto(id) {
     getsPhoto(id, 'content');
 
+    //for this to work we'd have to use cookies to send auth token on every request
     //var contentElement = document.getElementById('content');
     //var img = '<img src="' + baseURL + '/photos/' + id + '" alt="photo"></img>';
 
