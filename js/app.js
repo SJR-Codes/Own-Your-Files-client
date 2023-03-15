@@ -41,7 +41,7 @@ function getStuff(fpath, elem) {
       
     const request = new Request(baseURL + fpath, myInit);
     fetch(request)
-    .then((response) => {
+     .then((response) => {
         //console.debug(response);
         if (response.status === 200) {
             return response.json();
@@ -49,15 +49,107 @@ function getStuff(fpath, elem) {
             throw new Error("Something went wrong on API server!");
         }
     })
-    .then((response) => {
+     .then((response) => {
         //console.debug(response);
         var contentElement = document.getElementById(elem);
         contentElement.innerHTML = JSON.stringify(response);
-    })
-    .catch((error) => {
+    }) 
+     .catch((error) => {
         console.error(error);
     });
+}
 
+function getsPhotos(fpath, elem) {
+    const token = sessionStorage.getItem('token');
+
+    const myInit = {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + token,
+        },
+        mode: "cors",
+        cache: "default",
+    };
+      
+    const request = new Request(baseURL + fpath, myInit);
+    fetch(request)
+     .then((response) => {
+        //console.debug(response);
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error("Something went wrong on API server!");
+        }
+    })
+     .then((response) => {
+        //console.debug(response);
+        var contentElement = document.getElementById(elem);
+        var jason = response;
+        //console.debug(jason);
+        contentElement.innerHTML = "";
+        //<img src="data:image/png;base64,*PIC*" alt="profile picture"></img>
+        jason.forEach((photo) => {
+/*             Object.entries(photo).forEach(([key, value]) => {
+              console.log(`${key}: ${value}`);
+            });
+            
+ */
+            var click = "onclick=getPhoto('"+photo.id+"')"
+            var img = "<img src='data:image/jpeg;base64," + photo.thumbnail + "' alt='photo'></img>"
+            var span = "<span "+click+" class='thumb'>"+img+"<span/>"
+            //console.log(thumb);
+            contentElement.innerHTML += span;  
+        });
+
+        //contentElement.innerHTML = JSON.stringify(response);
+    }) 
+     .catch((error) => {
+        console.error(error);
+    });
+}
+
+function getsPhoto(id, elem) {
+    const token = sessionStorage.getItem('token');
+    const fpath = "/photos/" + id;
+    const myInit = {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + token,
+        },
+        mode: "cors",
+        cache: "default",
+    };
+      
+    const request = new Request(baseURL + fpath, myInit);
+    fetch(request)
+     .then((response) => {
+        //console.debug(response);
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error("Something went wrong on API server!");
+        }
+    })
+     .then((response) => {
+        //console.debug(response);
+        var contentElement = document.getElementById(elem);
+        var jason = response;
+        //console.debug(jason);
+        contentElement.innerHTML = "";
+        //<img src="data:image/png;base64,*PIC*" alt="profile picture"></img>
+        var click = "onclick=getFullPhoto('"+id+"')"
+        var img = "<img src='data:image/jpeg;base64," + jason.image + "' alt='photo'></img>"
+        var span = "<span "+click+" class='midpic'>"+img+"<span/>"
+        //console.log(thumb);
+        contentElement.innerHTML += span;
+
+        //contentElement.innerHTML = JSON.stringify(response);
+    }) 
+     .catch((error) => {
+        console.error(error);
+    });
 }
 
 function postStuff(fpath, body){
@@ -130,5 +222,14 @@ function getUserInfo() {
 }
 
 function getPhotos() {
-    getStuff( "/photos/", "content");
+    getsPhotos("/photos/", 'content');    
+}
+
+function getPhoto(id) {
+    getsPhoto(id, 'content');
+
+    //var contentElement = document.getElementById('content');
+    //var img = '<img src="' + baseURL + '/photos/' + id + '" alt="photo"></img>';
+
+    //contentElement.innerHTML = img;
 }
