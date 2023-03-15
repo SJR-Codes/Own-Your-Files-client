@@ -42,13 +42,13 @@ a { color: #6226d1; }
 }
 .oyf-foot p {
     margin: 0;
-    padding: 0;
+    padding: 1em 0;
 }
-.oyf-foot a {
+.oyf-foot a, .oyf-foot .fakelink {
     color: antiquewhite;
     text-decoration: none;
 }
-.oyf-foot a:hover { color: #24202e; font-weight: bold;}
+.oyf-foot a:hover, .oyf-foot .fakelink:hover { color: #24202e; font-weight: bold; cursor: pointer;}
 
 .oyf-foot .tiny {font-size: calc(6px + 0.390625vw);}
 .oyf-foot .tiny a { text-decoration: underline;}
@@ -69,6 +69,8 @@ a { color: #6226d1; }
 .text-input::placeholder {
     color: #6b6969;
 }
+
+.hidden {display: none;}
 
 .button {
     background-color: #858a88;
