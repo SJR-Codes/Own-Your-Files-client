@@ -112,8 +112,8 @@ function doLogin() {
     const queryParams = { username: usern, password: password }
     const formbody = new URLSearchParams(queryParams).toString()
     
-    var success = postStuff("/auth/jwt/login", formbody);
-    //console.debug("Should be success: " + success.toString());
+    postStuff("/auth/jwt/login", formbody);
+    
     if( sessionStorage.getItem('token') !== null ) {
         showNavi();
         getPhotos();
