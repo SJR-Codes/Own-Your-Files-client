@@ -89,3 +89,11 @@ a { color: #6226d1; }
     padding: 0.5em 0.5em;
     cursor: pointer;
 }
+
+.midpic {
+    cursor: pointer;
+}
+
+.midpic img {
+    width: 100%;
+}
