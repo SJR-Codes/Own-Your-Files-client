@@ -26,7 +26,7 @@ form.addEventListener('submit', (event) => {
     //console.debug('Posting form...');
 });
 
-function fetchstuff(fpath, elem) {
+function getStuff(fpath, elem) {
     const token = sessionStorage.getItem('token');
 
     const myInit = {
@@ -60,22 +60,9 @@ function fetchstuff(fpath, elem) {
 
 }
 
-function doLogin() {
-    var userElement = document.getElementById('username');
-    var passwordElement = document.getElementById('password');
-    var usern = userElement.value;
-    var password = passwordElement.value;
-
-    if( usern == "" || password == "" ) {
-        alert("Enter username and password, please.");
-        return null;
-    }
-
-    const queryParams = { username: usern, password: password }
-    const formbody = new URLSearchParams(queryParams).toString()
-    
+function postStuff(fpath, body){
     //console.debug(formbody);
-    const request = new Request(baseURL + "/auth/jwt/login", {
+    const request = new Request(baseURL + fpath, {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         //credentials: "same-origin", // include, *same-origin, omit
@@ -83,8 +70,8 @@ function doLogin() {
         headers: {
             //"Content-Type": "application/json",
             'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        body: formbody, //'username=a%40a.fo&password=asd', //formbody,
+        },
+        body: body, //'username=a%40a.fo&password=asd', //formbody,
     });
 
     fetch(request)
@@ -104,12 +91,33 @@ function doLogin() {
         //console.debug(token);
         var contentElement = document.getElementById('content');
         contentElement.innerHTML = 'Logged in...';
-        showNavi();
-        getPhotos();
+        //console.debug("Got token: "+token);
     })
     .catch((error) => {
         console.error(error);
     });
+}
+
+function doLogin() {
+    var userElement = document.getElementById('username');
+    var passwordElement = document.getElementById('password');
+    var usern = userElement.value;
+    var password = passwordElement.value;
+
+    if( usern == "" || password == "" ) {
+        alert("Enter username and password, please.");
+        return null;
+    }
+
+    const queryParams = { username: usern, password: password }
+    const formbody = new URLSearchParams(queryParams).toString()
+    
+    var success = postStuff("/auth/jwt/login", formbody);
+    //console.debug("Should be success: " + success.toString());
+    if( sessionStorage.getItem('token') !== null ) {
+        showNavi();
+        getPhotos();
+    }
 }
 
 function showNavi() {
@@ -118,9 +126,9 @@ function showNavi() {
 }
 
 function getUserInfo() {      
-    fetchstuff("/users/me", 'content');
+    getStuff("/users/me", 'content');
 }
 
 function getPhotos() {
-    fetchstuff( "/photos/", "content");
+    getStuff( "/photos/", "content");
 }
