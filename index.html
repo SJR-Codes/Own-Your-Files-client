@@ -19,12 +19,16 @@
         <br><br>
         <input type="password" name="password" id="password" class="text-input" placeholder="Password">
         <br><br>
-        <button class="button" onclick="doLogin()">Login</button>
+        <button class="button" onclick=doLogin()>Login</button>
     </form>
 </div>
-<div id="footer" class="oyf-foot"></div>
-<br><br>
-<button class="button" onclick="getUserInfo()">testing secrets</button>
+<div id="footer" class="oyf-foot">
+    <p id="footnavi" class="center hidden">
+        <span class="fakelink" onclick=getPhotos()>Photos</span> | 
+        <span class="fakelink" onclick=getUserInfo()>Upload</span> |  
+        <span class="fakelink" onclick=getUserInfo()>Me</span>
+    </p>
+</div>
 </body>
 <script src="js/app.js"></script>
 </html>

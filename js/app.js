@@ -38,6 +38,40 @@ form.addEventListener('submit', (event) => {
 
 const baseURL = "http://127.0.0.1:8000";
 
+function getPhotos() {
+    const token = sessionStorage.getItem('token')
+    //event.preventDefault();
+    const myInit = {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + token,
+        },
+        mode: "cors",
+        cache: "default",
+    };
+      
+    const request = new Request(baseURL + "/photos/", myInit);
+
+    fetch(request)
+    .then((response) => {
+        //console.debug(response);
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error("Something went wrong on API server!");
+        }
+    })
+    .then((response) => {
+        //console.debug(response);
+        var contentElement = document.getElementById('content');
+        contentElement.innerHTML = JSON.stringify(response);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+}
+
 function doLogin() {
     var userElement = document.getElementById('username');
     var passwordElement = document.getElementById('password');
@@ -87,10 +121,17 @@ function doLogin() {
         //console.debug(token);
         var contentElement = document.getElementById('content');
         contentElement.innerHTML = 'Logged in...';
+        showNavi();
+        //loadImages();
     })
     .catch((error) => {
         console.error(error);
     });
+}
+
+function showNavi() {
+    var element = document.getElementById("footnavi");
+    element.classList.remove("hidden");
 }
 
 function getUserInfo() {
