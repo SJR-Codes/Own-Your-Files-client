@@ -29,10 +29,11 @@ async function postData(url = "", data = {}) {
 
 } */
 
+//prevent form submit
 const form = document.getElementById('login-form');
 form.addEventListener('submit', (event) => {
     event.preventDefault();
-    console.debug('Posting form...');
+    //console.debug('Posting form...');
 });
 
 const baseURL = "http://127.0.0.1:8000";
@@ -43,11 +44,16 @@ function doLogin() {
     var usern = userElement.value;
     var password = passwordElement.value;
 
+    if( usern == "" || password == "" ) {
+        alert("Enter username and password, please.");
+        return null;
+    }
+
     const queryParams = { username: usern, password: password }
     const formbody = new URLSearchParams(queryParams).toString()
     
     //console.debug(formbody);
-    const request = new Request(baseURL+"/auth/jwt/login", {
+    const request = new Request(baseURL + "/auth/jwt/login", {
         method: "POST",
         mode: "cors", // no-cors, *cors, same-origin
         //credentials: "same-origin", // include, *same-origin, omit
@@ -76,7 +82,7 @@ function doLogin() {
     .then((response) => {
         //console.debug(response);
         const token = response.access_token;
-        //set token into sessionStorage
+        //set token into sessionStorage -> destroyed when client closed
         sessionStorage.setItem('token', token);
         //console.debug(token);
         var contentElement = document.getElementById('content');
@@ -100,7 +106,7 @@ function getUserInfo() {
         cache: "default",
     };
       
-    const request = new Request(baseURL+"/users/me", myInit);
+    const request = new Request(baseURL + "/users/me", myInit);
 
     fetch(request)
     .then((response) => {
