@@ -84,3 +84,8 @@ a { color: #6226d1; }
     margin: 4px 2px;
     cursor: pointer;
   }
+
+.thumb {
+    padding: 0.5em 0.5em;
+    cursor: pointer;
+}
