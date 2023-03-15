@@ -1,5 +1,5 @@
 // Example POST method implementation:
-async function postData(url = "", data = {}) {
+/* async function postData(url = "", data = {}) {
     // Default options are marked with *
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -15,19 +15,9 @@ async function postData(url = "", data = {}) {
       body: JSON.stringify(data), // body data type must match "Content-Type" header
     });
     return response.json(); // parses JSON response into native JavaScript objects
-}
-  
-/* function doLogin() {
-    var userElement = document.getElementById('username');
-    var passwordElement = document.getElementById('password');
-    var user = userElement.value;
-    var password = passwordElement.value;
-    username=a%40a.fo&password=asd
-    postData("http://127.0.0.1:8000/auth/jwt/login", { answer: 42 }).then((data) => {
-        console.log(data); // JSON data parsed by `data.json()` call
-    });
-
 } */
+
+const baseURL = "http://127.0.0.1:8000";
 
 //prevent form submit
 const form = document.getElementById('login-form');
@@ -36,11 +26,9 @@ form.addEventListener('submit', (event) => {
     //console.debug('Posting form...');
 });
 
-const baseURL = "http://127.0.0.1:8000";
+function fetchstuff(fpath, elem) {
+    const token = sessionStorage.getItem('token');
 
-function getPhotos() {
-    const token = sessionStorage.getItem('token')
-    //event.preventDefault();
     const myInit = {
         method: "GET",
         headers: {
@@ -51,8 +39,7 @@ function getPhotos() {
         cache: "default",
     };
       
-    const request = new Request(baseURL + "/photos/", myInit);
-
+    const request = new Request(baseURL + fpath, myInit);
     fetch(request)
     .then((response) => {
         //console.debug(response);
@@ -64,12 +51,13 @@ function getPhotos() {
     })
     .then((response) => {
         //console.debug(response);
-        var contentElement = document.getElementById('content');
+        var contentElement = document.getElementById(elem);
         contentElement.innerHTML = JSON.stringify(response);
     })
     .catch((error) => {
         console.error(error);
     });
+
 }
 
 function doLogin() {
@@ -98,11 +86,6 @@ function doLogin() {
           },
         body: formbody, //'username=a%40a.fo&password=asd', //formbody,
     });
-    
-    const url = request.url;
-    const method = request.method;
-    const credentials = request.credentials;
-    const bodyUsed = request.bodyUsed;
 
     fetch(request)
     .then((response) => {
@@ -122,7 +105,7 @@ function doLogin() {
         var contentElement = document.getElementById('content');
         contentElement.innerHTML = 'Logged in...';
         showNavi();
-        //loadImages();
+        getPhotos();
     })
     .catch((error) => {
         console.error(error);
@@ -134,36 +117,10 @@ function showNavi() {
     element.classList.remove("hidden");
 }
 
-function getUserInfo() {
-    const token = sessionStorage.getItem('token')
+function getUserInfo() {      
+    fetchstuff("/users/me", 'content');
+}
 
-    const myInit = {
-        method: "GET",
-        headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + token,
-        },
-        mode: "cors",
-        cache: "default",
-    };
-      
-    const request = new Request(baseURL + "/users/me", myInit);
-
-    fetch(request)
-    .then((response) => {
-        //console.debug(response);
-        if (response.status === 200) {
-            return response.json();
-        } else {
-            throw new Error("Something went wrong on API server!");
-        }
-    })
-    .then((response) => {
-        //console.debug(response);
-        var contentElement = document.getElementById('content');
-        contentElement.innerHTML = JSON.stringify(response);
-    })
-    .catch((error) => {
-        console.error(error);
-    });
+function getPhotos() {
+    fetchstuff( "/photos/", "content");
 }
