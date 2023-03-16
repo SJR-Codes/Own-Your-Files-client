@@ -19,13 +19,6 @@
 
 const baseURL = "http://127.0.0.1:8000";
 
-//prevent form submit
-const form = document.getElementById('login-form');
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    //console.debug('Posting form...');
-});
-
 function getStuff(fpath, elem) {
     const token = sessionStorage.getItem('token');
 
@@ -163,7 +156,7 @@ function postStuff(fpath, body){
             //"Content-Type": "application/json",
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: body, //'username=a%40a.fo&password=asd', //formbody,
+        body: body,
     });
 
     fetch(request)
@@ -190,7 +183,9 @@ function postStuff(fpath, body){
     });
 }
 
-function doLogin() {
+function doLogin(e) {
+    e.preventDefault();
+
     var userElement = document.getElementById('username');
     var passwordElement = document.getElementById('password');
     var usern = userElement.value;
@@ -231,6 +226,68 @@ function getPhoto(id) {
     //for this to work we'd have to use cookies to send auth token on every request
     //var contentElement = document.getElementById('content');
     //var img = '<img src="' + baseURL + '/photos/' + id + '" alt="photo"></img>';
-
     //contentElement.innerHTML = img;
+}
+
+function showUpload() {
+    let form = `<form action="" id="up-form">
+    <input type="file" name="upfile" id="upfile" class="text-input" placeholder="">
+    <br><br>
+    <button class="button" onclick=doUpload(event)>Send</button>
+    </form>`;
+
+    var contentElement = document.getElementById('content');
+    contentElement.innerHTML = form;
+}
+
+function doUpload(e) {
+    e.preventDefault();
+
+    var formElem = document.getElementById('up-form');
+    //console.debug(formElem);
+    form = new FormData(formElem)
+
+/*     const fileInput = document.getElementById('upfile');
+    form = new FormData()
+    form.append("upfile", fileInput.files[0]);
+ */
+    
+    //console.debug(form);
+    upStuff("/upload/", form)
+
+}
+
+function upStuff(fpath, body){
+    var token = sessionStorage.getItem('token');
+    //console.debug(formbody);
+    let request = new Request(baseURL + fpath, {
+        method: "POST",
+        mode: "cors", // no-cors, *cors, same-origin
+        //credentials: "same-origin", // include, *same-origin, omit
+        //referrerPolicy: "same-origin", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        headers: {
+            'Accept': 'application/json',
+            //'Content-Type': 'multipart/form-data', //i'll remember you, you puny piece of sales
+            'Authorization': "Bearer " + token,
+        },
+        body: body, 
+    });
+
+    fetch(request)
+    .then((response) => {
+        //console.debug(response);
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            throw new Error("Something went wrong on API server!");
+        }
+    })
+    .then((response) => {
+        //console.debug(response);
+        var contentElement = document.getElementById('content');
+        contentElement.innerHTML = 'Photo uploaded...';
+    })
+    .catch((error) => {
+        console.error(error);
+    });
 }
