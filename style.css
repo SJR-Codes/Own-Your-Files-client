@@ -8,6 +8,10 @@ body {
     font-size: calc(15px + 0.390625vw); /* responsive font size */
     padding: 0.1em 0.1em;
     text-align: center;
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 h1, h2, h3 { margin: 0.2em 0; }
 
@@ -17,7 +21,11 @@ a { color: #6226d1; }
 .oyf-head, .oyf-foot {
     color: antiquewhite;
 }
-.oyf-content { background-image: linear-gradient(to bottom, #848386, #a09ea5); padding: 0.5em;}
+.oyf-content { 
+    background-image: linear-gradient(to bottom, #848386, #a09ea5); 
+    padding: 0.5em;
+    min-height: 75vh;
+}
 
 .block { background-color: #a09ea5; padding: 0.5em  1em;}
 
@@ -39,6 +47,7 @@ a { color: #6226d1; }
     border-radius: 0 0 1.5em 1.5em;
     height: 4em;
     vertical-align: middle;
+    /*margin-top: auto;*/
 }
 .oyf-foot p {
     margin: 0;
