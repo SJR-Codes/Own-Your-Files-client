@@ -15,9 +15,8 @@ body {
     text-align: center;
     min-height: 100vh;
 }
-h1, h2, h3 { margin: 0.2em 0; }
-.center { text-align: center; }
-.oyf-head, .oyf-foot {color: antiquewhite;}
+h1, h2, h3 { margin: 0; }
+.oyf-head, .oyf-foot {color: antiquewhite; height: 3.7em;}
 .oyf-content { 
     background-image: linear-gradient(to bottom, #848386, #a09ea5); 
     padding: 0.5em;
@@ -40,7 +39,7 @@ h1, h2, h3 { margin: 0.2em 0; }
 }
 .oyf-foot p {margin: 0;padding: 1em 0;}
 .oyf-foot a, .oyf-foot .fakelink {color: antiquewhite;}
-.oyf-foot a:hover, .oyf-foot .fakelink:hover { color: #24202e; font-weight: bold; cursor: pointer;}
+.oyf-foot .fakelink:hover { color: #24202e; font-weight: bold; cursor: pointer;}
 .text-input {
     max-width: 20em;
     border-radius: 4em;
@@ -81,7 +80,7 @@ h1, h2, h3 { margin: 0.2em 0; }
     </form>
 </div>
 <div id="footer" class="oyf-foot">
-    <p id="footnavi" class="center hidden">
+    <p id="footnavi" class="hidden">
         <span class="fakelink" onclick=getPhotos()>Photos</span> | 
         <span class="fakelink" onclick=showUpload()>Upload</span> |  
         <span class="fakelink" onclick=getUserInfo()>Me</span>
@@ -110,8 +109,6 @@ function getStuff(fpath, elem) {
      .then((response) => {
         if (response.status === 200) {
             return response.json();
-        } else {
-            throw new Error("Something went wrong on API server!");
         }
     })
      .then((response) => {
@@ -126,8 +123,6 @@ function getsPhotos(fpath, elem) {
      .then((response) => {
         if (response.status === 200) {
             return response.json();
-        } else {
-            throw new Error("Something went wrong on API server!");
         }
     })
      .then((response) => {
@@ -149,8 +144,6 @@ function getsPhoto(id, elem) {
      .then((response) => {
         if (response.status === 200) {
             return response.json();
-        } else {
-            throw new Error("Something went wrong on API server!");
         }
     })
      .then((response) => {
@@ -177,8 +170,6 @@ function postStuff(fpath, body){
     .then((response) => {
         if (response.status === 200) {
             return response.json();
-        } else {
-            throw new Error("Something went wrong on API server!");
         }
     })
     .then((response) => {
@@ -242,8 +233,6 @@ function upStuff(fpath, body){
     .then((response) => {
         if (response.status === 200) {
             return response.json();
-        } else {
-            throw new Error("Something went wrong on API server!");
         }
     })
     .then((response) => {
