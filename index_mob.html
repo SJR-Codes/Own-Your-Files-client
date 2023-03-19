@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#4a4a4a">
+<link rel="manifest" href="manifest.webmanifest" />
 <title>Own Your Files – Client</title>
 <style>
 * { box-sizing: border-box; }
@@ -216,7 +223,7 @@ async function showCategories() {
     const request = new Request(baseURL + "/categories/", myInit);
     res = await goFetch(request);
     if ( res !== false ) {
-        cont.innerHTML = "";
+        cont.innerHTML = "<h3>Photo categories:</h3>";
         res.forEach((category) => {
             //let click = 'onclick="getPhotos(\'' + category.id + '\')"';
             //let img = "<img src='data:image/jpeg;base64," + photo.thumbnail + "' alt='photo'></img>";
@@ -232,7 +239,7 @@ async function showCategories() {
     cont.innerHTML += form;
 }
 function showUpload() {
-    let form = `<h2>Upload new photo: </h2><form action="" id="up-form">
+    let form = `<h3>Upload new photo:</h3><form action="" id="up-form">
     <input type="file" name="upfile" id="upfile" class="text-input" placeholder=""><br><br>
     <button class="button" onclick="doUpload(event)">Send</button></form>`;
     cont.innerHTML = form;
