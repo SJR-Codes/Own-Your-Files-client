@@ -1,108 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#4a4a4a">
-<link rel="manifest" href="manifest.webmanifest">
-<title>Own Your Files – Client</title>
-<style>
-* { box-sizing: border-box; }
-body {
-    background-color: #b0aabb;
-    margin: 0 auto;
-    max-width: 50em;
-    font-family: "Helvetica", "Arial", sans-serif;
-    font-size: calc(15px + 0.390625vw); /* responsive font size */
-    text-align: center;
-    min-height: 100vh;
-}
-h1, h2, h3 { margin: 0; }
-.oyf-head, .oyf-foot {color: antiquewhite; height: 3.7em;}
-.oyf-content { 
-    background-image: linear-gradient(to bottom, #848386, #a09ea5); 
-    padding: 0.5em 0;
-    min-height: 75vh;
-}
-.oyf-head {
-    background-image: linear-gradient(to bottom, #39383b, #848386);
-    border-radius: 5em 5em 0 0;
-    overflow: hidden;
-}
-.oyf-head::after {
-    content: "";
-    display: table;
-    clear: both;
-    border-bottom: #24202e 2px;
-}
-.oyf-foot {
-    background-image: linear-gradient(to bottom,#848386, #39383b);
-    border-radius: 0 0 1.5em 1.5em;
-}
-.oyf-foot p {margin: 0;padding: 1em 0;}
-.oyf-foot a, .oyf-foot .fakelink {color: antiquewhite;}
-.oyf-foot .fakelink:hover { color: #24202e; font-weight: bold; cursor: pointer;}
-.text-input {
-    max-width: 20em;
-    border-radius: 4em;
-    font-size: 1rem;
-    background-color: #b0b5b3;
-    padding: 1em 1em;
-    margin: 0.5em 0;
-    border: none;
-}
-.text-input::placeholder {color: #6b6969;}
-.hidden {display: none;}
-.button {
-    background-color: #858a88;
-    border: 1px solid #2d2b2b;
-    border-radius: 4em;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #262525;
-    padding: 0.5em 0.8em;
-    cursor: pointer;
-}
-.thumb {padding: 0.5em 0.5em;cursor: pointer;}
-.midpic img {cursor: pointer;width: 100%;}
-.error, .success {border-radius: 4em; margin-top: 1em; padding: 0.5em 0.5em;}
-.error{background-color: #a3182b;}
-.success{background-color: #238860;}
-</style>
-</head>
-<body>
-<div class="oyf-head">
-    <h1>Own Your Files</h1>
-    <h3>- Photos -</h3>
-</div>
-<div id="content" class="oyf-content">
-    <form action="" id="login-form">
-        <input type="text" name="username" id="username" class="text-input" placeholder="Username">
-        <br><br>
-        <input type="password" name="password" id="password" class="text-input" placeholder="Password">
-        <br><br>
-        <button class="button" onclick="doLogin(event)">Login</button>
-    </form>
-    <img src="logos/logo256.png" alt="Own Your Files logo" width="256px">
-</div>
-<div id="footer" class="oyf-foot">
-    <p id="footnavi" class="hidden">
-        <span class="fakelink" onclick="getPhotos()">Photos</span> | 
-        <span class="fakelink" onclick="showUpload()">Upload</span> | 
-        <span class="fakelink" onclick="showCategories()">Categories</span> | 
-        <span class="fakelink" onclick="getUserInfo()">Me</span>
-    </p>
-</div>
-</body>
-<script>
 const baseURL = "http://127.0.0.1:8000";
 let cont = document.getElementById('content');
+let foot = document.getElementById("footer");
 
 function getInit() {
     let myInit = {
@@ -171,7 +69,7 @@ async function doLogin(e) {
     const usern = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     if( usern == "" || password == "" ) {
-        cont.innerHTML += "<div class='error'>Enter username and password, please.</div>";
+        cont.innerHTML = "<div class='error'>Enter username and password, please.</div>" + cont.innerHTML;
         return null;
     }
     const queryParams = { username: usern, password: password }
@@ -187,8 +85,8 @@ async function doLogin(e) {
     res = await goFetch(request);
     if ( res !== false ) {
         sessionStorage.setItem('token', res.access_token);
-        showNavi();
-        getPhotos();
+        await showNavi();
+        await getPhotos();
     }
 }
 async function AddCategory(e) {
@@ -217,8 +115,16 @@ async function AddCategory(e) {
 }
 
 
-function showNavi() {
-    document.getElementById("footnavi").classList.remove("hidden");
+async function showNavi() {
+    let navi = 
+    `<p id="footnavi">
+        <span class="fakelink" onclick="getPhotos()">Photos</span> | 
+        <span class="fakelink" onclick="showUpload()">Upload</span> | 
+        <span class="fakelink" onclick="showCategories()">Categories</span> | 
+        <span class="fakelink" onclick="getUserInfo()">Me</span>
+    </p>`;
+
+    foot.innerHTML = navi;
 }
 async function showCategories() {
     let myInit = getInit();
@@ -274,5 +180,3 @@ async function upStuff(fpath, body){
         return res;
     }
 }
-</script>
-</html>
