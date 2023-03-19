@@ -2,7 +2,7 @@ const baseURL = "http://127.0.0.1:8000";
 let cont = document.getElementById('content');
 let foot = document.getElementById("footer");
 let userEmail = false;
-let isAdmin = false;
+let isAdmin = false; //relax, it's just for showing or not certain forms, your beh... backend is safe
 
 function getInit() {
     let myInit = {
