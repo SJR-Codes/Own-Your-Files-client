@@ -22,6 +22,7 @@ async function goFetch(request){
         return await response.json();
     }
     else {
+        //TODO: catch errors -> location.reload(); to get back to login... implies that only error would be token timeout... in SUE cases that's appropriate punishment too
         cont.innerHTML += "<div class='error'>Error: Couldn't fetch data. Contact support.</div>";
         return false;
     }
@@ -142,12 +143,7 @@ async function showUserInfo(clear = false) {
             <form action="" id="user-form">
             <input type="text" name="email" id="email" class="text-input" value="${userEmail}"><br><br>
             <button class="button" onclick="UpdateUser(event)">Change</button></form>`;
-        if ( clear == true ) {
-            cont.innerHTML = uinfo;
-        }
-        else {
-            cont.innerHTML += uinfo;
-        }
+        clear == true ? cont.innerHTML = uinfo : cont.innerHTML += uinfo;
     };
 }
 async function showCategories(clear = false) {
@@ -170,12 +166,7 @@ async function showCategories(clear = false) {
     <input type="text" name="title" id="title" class="text-input" placeholder="New category"><br><br>
     <button class="button" onclick="AddCategory(event)">Add</button></form>`;
     block += form;
-    if ( clear == true ) {
-        cont.innerHTML = block;
-    }
-    else {
-        cont.innerHTML += block;
-    }
+    clear == true ? cont.innerHTML = block : cont.innerHTML += block;
 }
 function showUpload() {
     let form = `<h3>Upload new photo:</h3><form action="" id="up-form">
