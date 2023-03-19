@@ -39,7 +39,7 @@ h1, h2, h3 { margin: 0; }
     font-size: 1rem;
     background-color: #b0b5b3;
     padding: 1em 1em;
-    margin: 0.5em 0;
+    margin: 0.2em 0;
     border: none;
 }
 .text-input::placeholder {color: #6b6969;}
@@ -51,7 +51,7 @@ h1, h2, h3 { margin: 0; }
     font-size: 2rem;
     font-weight: bold;
     color: #262525;
-    padding: 0.5em 0.8em;
+    padding: 0.5em 0.5em;
     cursor: pointer;
 }
 .thumb {padding: 0.5em 0.5em;cursor: pointer;}
@@ -60,3 +60,4 @@ h1, h2, h3 { margin: 0; }
 .error{background-color: #a3182b;}
 .success{background-color: #238860;}
 .logo{margin-top: 2em;}
+.divider{margin: auto; border: none; width: 50%; padding: 1em;}

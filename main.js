@@ -1,6 +1,8 @@
 const baseURL = "http://127.0.0.1:8000";
 let cont = document.getElementById('content');
 let foot = document.getElementById("footer");
+let userEmail = false;
+let isAdmin = false;
 
 function getInit() {
     let myInit = {
@@ -23,20 +25,6 @@ async function goFetch(request){
         cont.innerHTML += "<div class='error'>Error: Couldn't fetch data. Contact support.</div>";
         return false;
     }
-}
-async function getUserInfo() {
-    const token = sessionStorage.getItem('token');    
-    let myInit = getInit();
-    const request = new Request(baseURL + "/users/me", myInit);
-    res = await goFetch(request);
-    if ( res !== false ) {
-        //cont.innerHTML = JSON.stringify(res);
-        let uinfo = 
-            `<form action="" id="user-form">
-            <input type="text" name="email" id="email" class="text-input" value="${res.email}"><br><br>
-            <button class="button" onclick="UpdateUser(event)">Change</button></form>`;
-        cont.innerHTML = uinfo;
-    };
 }
 async function getPhotos() {
     let myInit = getInit();
@@ -85,6 +73,7 @@ async function doLogin(e) {
     res = await goFetch(request);
     if ( res !== false ) {
         sessionStorage.setItem('token', res.access_token);
+        await setUserInfo();
         await showNavi();
         await getPhotos();
     }
@@ -109,42 +98,89 @@ async function AddCategory(e) {
     });
     res = await goFetch(request);
     if ( res !== false ) {
-        await showCategories();
+        await showSettings();
         cont.innerHTML += '<div class="success">New category added very sucessfully!</div>';
     }
 }
 
+async function showSettings() {
+    cont.innerHTML = "";
+    await showUserInfo();
+    await showDivider();
+
+    console.debug(isAdmin)
+    if ( isAdmin == true ) {
+        await showCategories();
+    }
+}
+
+async function showDivider() {
+    cont.innerHTML += "<div class='divider'></div>";
+}
 
 async function showNavi() {
     let navi = 
     `<p id="footnavi">
         <span class="fakelink" onclick="getPhotos()">Photos</span> | 
         <span class="fakelink" onclick="showUpload()">Upload</span> | 
-        <span class="fakelink" onclick="showCategories()">Categories</span> | 
-        <span class="fakelink" onclick="getUserInfo()">Me</span>
+        <span class="fakelink" onclick="showSettings()">Settings</span>
     </p>`;
 
     foot.innerHTML = navi;
 }
-async function showCategories() {
+async function setUserInfo() {
+    const token = sessionStorage.getItem('token');    
+    let myInit = getInit();
+    const request = new Request(baseURL + "/users/me", myInit);
+    res = await goFetch(request);
+    if ( res !== false ) {
+        //cont.innerHTML = JSON.stringify(res);
+        userEmail = res.email;
+        isAdmin = res.is_superuser;
+    }
+}
+async function showUserInfo(clear = false) {
+    if ( userEmail !== false ) {
+        //cont.innerHTML = JSON.stringify(res);
+        let uinfo = 
+            `<h3>Your email:</h3>
+            <form action="" id="user-form">
+            <input type="text" name="email" id="email" class="text-input" value="${userEmail}"><br><br>
+            <button class="button" onclick="UpdateUser(event)">Change</button></form>`;
+        if ( clear == true ) {
+            cont.innerHTML = uinfo;
+        }
+        else {
+            cont.innerHTML += uinfo;
+        }
+    };
+}
+async function showCategories(clear = false) {
     let myInit = getInit();
     const request = new Request(baseURL + "/categories/", myInit);
     res = await goFetch(request);
+    let block = ""
     if ( res !== false ) {
-        cont.innerHTML = "<h3>Photo categories:</h3>";
+        block = "<h3>Photo categories:</h3>";
         res.forEach((category) => {
             //let click = 'onclick="getPhotos(\'' + category.id + '\')"';
             //let img = "<img src='data:image/jpeg;base64," + photo.thumbnail + "' alt='photo'></img>";
             //let span = "<span " + click + " class='list'>" + category.title + "<span/>";
             let span = "<span class='list'>" + category.title + "<span/><br>";
-            cont.innerHTML += span;  
+            block += span;  
         });
     }
 
     let form = `<form action="" id="cat-form">
     <input type="text" name="title" id="title" class="text-input" placeholder="New category"><br><br>
     <button class="button" onclick="AddCategory(event)">Add</button></form>`;
-    cont.innerHTML += form;
+    block += form;
+    if ( clear == true ) {
+        cont.innerHTML = block;
+    }
+    else {
+        cont.innerHTML += block;
+    }
 }
 function showUpload() {
     let form = `<h3>Upload new photo:</h3><form action="" id="up-form">
