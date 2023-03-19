@@ -107,8 +107,6 @@ async function showSettings() {
     cont.innerHTML = "";
     await showUserInfo();
     await showDivider();
-
-    console.debug(isAdmin)
     if ( isAdmin == true ) {
         await showCategories();
     }
@@ -117,14 +115,11 @@ async function showSettings() {
 async function showDivider() {
     cont.innerHTML += "<div class='divider'></div>";
 }
-
+//TODO: daamn, tis' ugly as fudge
 async function showNavi() {
-    let navi = 
-    `<p id="footnavi">
-        <span class="fakelink" onclick="getPhotos()">Photos</span> | 
-        <span class="fakelink" onclick="showUpload()">Upload</span> | 
-        <span class="fakelink" onclick="showSettings()">Settings</span>
-    </p>`;
+    let navi = `<p id="footnavi"><span class="fakelink" onclick="getPhotos()">Photos</span> | `;
+    if ( isAdmin == true ) { navi += `<span class="fakelink" onclick="showUpload()">Upload</span> | `; }
+    navi += `<span class="fakelink" onclick="showSettings()">Settings</span></p>`;
 
     foot.innerHTML = navi;
 }
