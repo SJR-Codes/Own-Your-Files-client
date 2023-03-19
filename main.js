@@ -3,6 +3,8 @@ let cont = document.getElementById('content');
 let foot = document.getElementById("footer");
 let userEmail = false;
 let isAdmin = false; //relax, it's just for showing or not certain forms, your beh... backend is safe
+let categories = false;
+//TODO: we're getting lot of globals lately, is this the way?
 
 function getInit() {
     let myInit = {
@@ -75,6 +77,7 @@ async function doLogin(e) {
     if ( res !== false ) {
         sessionStorage.setItem('token', res.access_token);
         await setUserInfo();
+        await getCategories();
         await showNavi();
         await getPhotos();
     }
@@ -146,14 +149,19 @@ async function showUserInfo(clear = false) {
         clear == true ? cont.innerHTML = uinfo : cont.innerHTML += uinfo;
     };
 }
-async function showCategories(clear = false) {
+async function getCategories() {
     let myInit = getInit();
     const request = new Request(baseURL + "/categories/", myInit);
     res = await goFetch(request);
-    let block = ""
     if ( res !== false ) {
+        categories = res;
+    }
+}
+async function showCategories(clear = false) {
+    let block = ""
+    if ( categories !== false ) {
         block = "<h3>Photo categories:</h3>";
-        res.forEach((category) => {
+        categories.forEach((category) => {
             //let click = 'onclick="getPhotos(\'' + category.id + '\')"';
             //let img = "<img src='data:image/jpeg;base64," + photo.thumbnail + "' alt='photo'></img>";
             //let span = "<span " + click + " class='list'>" + category.title + "<span/>";
@@ -170,8 +178,19 @@ async function showCategories(clear = false) {
 }
 function showUpload() {
     let form = `<h3>Upload new photo:</h3><form action="" id="up-form">
-    <input type="file" name="upfile" id="upfile" class="text-input" placeholder=""><br><br>
-    <button class="button" onclick="doUpload(event)">Send</button></form>`;
+    <input type="file" name="upfile" id="upfile" class="text-input" placeholder=""><br><br>`;
+
+    if ( categories !== false ) {
+        list = "<select class='text-input' id='category' name='category'>";
+        list += "<option value=''> - select category - </option>";
+        categories.forEach((category) => {
+            list += "<option value='" + category.id + "'>" + category.title + "</option>";
+        });
+        list += "</select>"
+    }
+
+    form += list + `<br><br><button class="button" onclick="doUpload(event)">Send</button></form>`;
+
     cont.innerHTML = form;
 }
 async function doUpload(e) {
