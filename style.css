@@ -54,8 +54,8 @@ h1, h2, h3 { margin: 0; }
     padding: 0.5em 0.5em;
     cursor: pointer;
 }
-.thumb {padding: 0.5em 0.5em;cursor: pointer;}
-.midpic img {cursor: pointer;width: 100%;}
+.thumb {padding: 0.5em 0.5em; cursor: pointer;}
+.midpic img {cursor: pointer; max-width: 100%;}
 .error, .success {border-radius: 4em; margin-top: 1em; padding: 0.5em 0.5em;}
 .error{background-color: #a3182b;}
 .success{background-color: #238860;}
