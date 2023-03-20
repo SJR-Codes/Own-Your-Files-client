@@ -32,7 +32,7 @@ async function goFetch(request){
 async function getPhotos() {
     let myInit = getInit();
     const request = new Request(baseURL + "/photos/", myInit);
-    res = await goFetch(request);
+    let res = await goFetch(request);
     if ( res !== false ) {
         cont.innerHTML = "";
         res.forEach((photo) => {
@@ -47,7 +47,7 @@ async function getPhoto(id) {
     const fpath = "/photos/" + id;
     let myInit = getInit();
     const request = new Request(baseURL + fpath, myInit);
-    res = await goFetch(request);
+    let res = await goFetch(request);
     //console.debug(res)
     if ( res !== false ) {
         let click = 'onclick="getFullPhoto(\'' + id + '\')"';
@@ -78,7 +78,7 @@ async function doLogin(e) {
         },
         body: formbody,
     });
-    res = await goFetch(request);
+    let res = await goFetch(request);
     if ( res !== false ) {
         sessionStorage.setItem('token', res.access_token);
         await setUserInfo();
@@ -105,7 +105,7 @@ async function AddCategory(e) {
         },
         body: data,
     });
-    res = await goFetch(request);
+    let res = await goFetch(request);
     if ( res !== false ) {
         await getCategories();
         await showSettings();
@@ -137,7 +137,7 @@ async function setUserInfo() {
     const token = sessionStorage.getItem('token');    
     let myInit = getInit();
     const request = new Request(baseURL + "/users/me", myInit);
-    res = await goFetch(request);
+    let res = await goFetch(request);
     if ( res !== false ) {
         //cont.innerHTML = JSON.stringify(res);
         userEmail = res.email;
@@ -158,7 +158,7 @@ async function showUserInfo(clear = false) {
 async function getCategories() {
     let myInit = getInit();
     const request = new Request(baseURL + "/categories/", myInit);
-    res = await goFetch(request);
+    let res = await goFetch(request);
     if ( res !== false ) {
         categories = res;
     }
@@ -214,9 +214,9 @@ async function doUpload(e) {
     form = new FormData(document.getElementById('up-form'));
 
     //TODO: error checking needed here...
-    res = await upStuff("/upload/", form);
+    let res = await upStuff("/upload/", form);
     console.debug(res);
-    await getPhoto(res.id)
+    await getPhoto(res.id);
     cont.innerHTML += '<div class="success">Photo uploaded very sucessfully!</div>';
 }
 async function upStuff(fpath, body){
@@ -230,7 +230,7 @@ async function upStuff(fpath, body){
         },
         body: body, 
     });
-    res = await goFetch(request);
+    let res = await goFetch(request);
     if ( res !== false ) {
         return res;
     }
