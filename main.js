@@ -53,9 +53,10 @@ async function getPhoto(id) {
         let click = 'onclick="getFullPhoto(\'' + id + '\')"';
         let img = "<img src='data:image/jpeg;base64," + res.image + "' alt='photo'></img>";
         let span = "<span " + click + " class='midpic'>" + img + "<span/><br>";
-        if ( res.category_id !== null ) {
+        //TODO: should learn how to async correctly...
+        /* if ( res.category_id !== null ) {
             span += "<span class='info'>" + categories[res.category_id].title + "<span/>";
-        }
+        } */
         cont.innerHTML = span;
     }
 }
