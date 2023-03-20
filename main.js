@@ -48,10 +48,14 @@ async function getPhoto(id) {
     let myInit = getInit();
     const request = new Request(baseURL + fpath, myInit);
     res = await goFetch(request);
+    //console.debug(res)
     if ( res !== false ) {
         let click = 'onclick="getFullPhoto(\'' + id + '\')"';
         let img = "<img src='data:image/jpeg;base64," + res.image + "' alt='photo'></img>";
-        let span = "<span " + click + " class='midpic'>" + img + "<span/>";
+        let span = "<span " + click + " class='midpic'>" + img + "<span/><br>";
+        if ( res.category_id !== null ) {
+            span += "<span class='info'>" + categories[res.category_id].title + "<span/>";
+        }
         cont.innerHTML = span;
     }
 }
@@ -102,6 +106,7 @@ async function AddCategory(e) {
     });
     res = await goFetch(request);
     if ( res !== false ) {
+        await getCategories();
         await showSettings();
         cont.innerHTML += '<div class="success">New category added very sucessfully!</div>';
     }
@@ -181,7 +186,7 @@ function showUpload() {
     <input type="file" name="upfile" id="upfile" class="text-input" placeholder=""><br><br>`;
 
     if ( categories !== false ) {
-        list = "<select class='text-input' id='category' name='category'>";
+        list = "<select class='text-input' id='category_id' name='category_id'>";
         list += "<option value=''> - select category - </option>";
         categories.forEach((category) => {
             list += "<option value='" + category.id + "'>" + category.title + "</option>";
@@ -195,11 +200,19 @@ function showUpload() {
 }
 async function doUpload(e) {
     e.preventDefault();
-    if( document.getElementById("upfile").files.length == 0 ){
+    const upfile = document.getElementById("upfile");
+    const category_id = document.getElementById("category_id").value;
+    if( upfile.files.length == 0 ){
        cont.innerHTML += '<div class="error">Select file to upload, pretty please!</div>';
        return false;
     }
+    if( category_id == '' ){
+       cont.innerHTML += '<div class="error">Select category for photo, pretty please!</div>';
+       return false;
+    }
     form = new FormData(document.getElementById('up-form'));
+
+    //TODO: error checking needed here...
     res = await upStuff("/upload/", form);
     console.debug(res);
     await getPhoto(res.id)
